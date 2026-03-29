@@ -193,7 +193,7 @@ header{position:relative;z-index:1;display:grid;grid-template-columns:1fr auto 1
 .play-icon{width:48px;height:48px;background:var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;transition:transform .2s;padding-left:3px;color:var(--dark);font-weight:bold}
 .video-item:hover .play-icon{transform:scale(1.1)}
 .video-info{padding:12px 14px}
-.video-title{font-size:13px;font-weight:600;color:var(--cream);margin-bottom:4px;line-height:1.4}
+.video-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px;line-height:1.4}
 .video-sub{font-size:11px;color:var(--muted)}
 .video-tag{display:inline-block;font-size:9px;color:var(--gold);background:var(--bg1);border:1px solid var(--border);border-radius:2px;padding:2px 7px;letter-spacing:1px;margin-bottom:6px;font-family:'IM Fell English SC',serif}
 .video-modal{position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.95);display:flex;align-items:center;justify-content:center;animation:fadeIn .2s;backdrop-filter:blur(8px)}
@@ -240,7 +240,7 @@ header{position:relative;z-index:1;display:grid;grid-template-columns:1fr auto 1
 .film-badge{font-size:9px;letter-spacing:1.5px;border-radius:2px;padding:3px 9px;min-width:44px;text-align:center;font-family:'IM Fell English SC',serif}
 .fdrama{color:var(--accent1);background:var(--bg1);border:1px solid var(--border)}
 .fmovie{color:var(--accent2);background:var(--bg2);border:1px solid var(--border)}
-.film-title{font-size:14px;font-weight:600;color:var(--cream)}
+.film-title{font-size:14px;font-weight:700;color:var(--text)}
 .film-role{font-size:11px;color:var(--muted);margin-top:3px}
 
 /* LIGHTBOX */
@@ -541,6 +541,13 @@ body.winter #headerSign{filter:invert(45%) sepia(40%) saturate(300%) hue-rotate(
         <!-- 오늘의 카드 -->
         <div>
           <div class="share-section-title">✦ 오늘의 변우석 카드</div>
+          <label class="fc-label">🖼️ 변우석 사진 선택</label>
+          <div class="format-tabs" id="cardPhotoTabs" style="margin-bottom:10px">
+            <button class="fmt-btn active" onclick="setCardPhoto(0,this)"><span class="fmt-icon">🎬</span><span class="fmt-label">선재</span></button>
+            <button class="fmt-btn" onclick="setCardPhoto(1,this)"><span class="fmt-icon">👑</span><span class="fmt-label">대군부인</span></button>
+            <button class="fmt-btn" onclick="setCardPhoto(2,this)"><span class="fmt-icon">📸</span><span class="fmt-label">화보A</span></button>
+            <button class="fmt-btn" onclick="setCardPhoto(3,this)"><span class="fmt-icon">✨</span><span class="fmt-label">화보B</span></button>
+          </div>
           <label class="fc-label">✨ AI 명대사 자동 생성</label>
           <div class="quote-display" id="quoteDisplay">
             <div class="quote-text" id="quoteText">"월요일이 기다려지게 해줄게요"</div>
@@ -583,8 +590,14 @@ body.winter #headerSign{filter:invert(45%) sepia(40%) saturate(300%) hue-rotate(
             <input class="fc-input" type="date" id="customEventDate"/>
             <button class="share-btn primary" onclick="addCustomEvent()" style="margin-top:0">+ 이벤트 추가</button>
           </div>
+          <label class="fc-label">🖼️ 변우석 사진 선택</label>
+          <div class="format-tabs" style="margin-bottom:10px">
+            <button class="fmt-btn active" onclick="setDdayPhoto(0,this)"><span class="fmt-icon">🎬</span><span class="fmt-label">선재</span></button>
+            <button class="fmt-btn" onclick="setDdayPhoto(1,this)"><span class="fmt-icon">👑</span><span class="fmt-label">대군부인</span></button>
+            <button class="fmt-btn" onclick="setDdayPhoto(2,this)"><span class="fmt-icon">📸</span><span class="fmt-label">화보A</span></button>
+            <button class="fmt-btn" onclick="setDdayPhoto(3,this)"><span class="fmt-icon">✨</span><span class="fmt-label">화보B</span></button>
+          </div>
           <label class="fc-label">📐 인스타그램 템플릿</label>
-          <div class="format-tabs" id="ddayFormatTabs">
             <button class="fmt-btn active" onclick="setDdayFormat('feed',this)"><span class="fmt-icon">⬛</span><span class="fmt-label">피드</span><span class="fmt-size">1080×1080</span></button>
             <button class="fmt-btn" onclick="setDdayFormat('story',this)"><span class="fmt-icon">📱</span><span class="fmt-label">스토리</span><span class="fmt-size">1080×1920</span></button>
           </div>
@@ -733,12 +746,18 @@ async function doSearch(){
 // ══ PHOTOS ══
 let photos=[],pFilter='all',pView=3,lbIdx=0;
 const curatedPhotos=[
-  {title:"선재 업고 튀어 — 류선재",tag:"드라마",src:"https://img.hankyung.com/photo/202404/01.36360086.1.jpg"},
-  {title:"21세기 대군부인 — 이안대군",tag:"드라마",src:"https://img.hankyung.com/photo/202603/01.38927234.1.jpg"},
-  {title:"변우석 공식 프로필",tag:"화보",src:"https://file.naver.com/api/image/resize?url=https%3A%2F%2Fmimgnews.pstatic.net%2Fimage%2F108%2F2024%2F05%2F28%2F0003254178_001_20240528143001895.jpg&type=f640_640"},
-  {title:"변우석 화보 — 바로엔터",tag:"화보",src:"https://mimgnews.pstatic.net/image/382/2024/07/04/0001073025_001_20240704162004879.jpg"},
-  {title:"힘쎈여자 강남순",tag:"드라마",src:"https://mimgnews.pstatic.net/image/382/2023/01/19/0000971432_001_20230119110006016.jpg"},
-  {title:"청춘기록 — 원해효",tag:"드라마",src:"https://img.hankyung.com/photo/202009/01.24002578.1.jpg"},
+  {title:"선재 업고 튀어 — 류선재",tag:"드라마",
+    src:"https://wsrv.nl/?url=https://img.hankyung.com/photo/202404/01.36360086.1.jpg&w=600&output=jpg"},
+  {title:"21세기 대군부인 — 이안대군",tag:"드라마",
+    src:"https://wsrv.nl/?url=https://img.hankyung.com/photo/202603/01.38927234.1.jpg&w=600&output=jpg"},
+  {title:"변우석 공식 프로필",tag:"화보",
+    src:"https://wsrv.nl/?url=https://mimgnews.pstatic.net/image/108/2024/05/28/0003254178_001_20240528143001895.jpg&w=600&output=jpg"},
+  {title:"변우석 화보",tag:"화보",
+    src:"https://wsrv.nl/?url=https://mimgnews.pstatic.net/image/382/2024/07/04/0001073025_001_20240704162004879.jpg&w=600&output=jpg"},
+  {title:"힘쎈여자 강남순",tag:"드라마",
+    src:"https://wsrv.nl/?url=https://mimgnews.pstatic.net/image/382/2023/01/19/0000971432_001_20230119110006016.jpg&w=600&output=jpg"},
+  {title:"청춘기록 — 원해효",tag:"드라마",
+    src:"https://wsrv.nl/?url=https://img.hankyung.com/photo/202009/01.24002578.1.jpg&w=600&output=jpg"},
 ];
 function loadPhotos(){const btn=document.getElementById('photoLoadBtn');btn.disabled=true;photos=[...curatedPhotos];renderPhotoGrid();document.getElementById('photoCount').textContent=photos.length+'장';btn.disabled=false;btn.innerHTML='🔄 새로고침'}
 function setPFilter(f,btn){pFilter=f;document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderPhotoGrid()}
@@ -754,7 +773,7 @@ function lbKey(e){if(e.key==='ArrowLeft')lbNav(-1);if(e.key==='ArrowRight')lbNav
 
 // ══ VIDEOS ══
 const videoList=[{id:'V-JpFrVQsyk',title:'선재 업고 튀어 — 공식 예고편',sub:'tvN · 2024',tag:'드라마'},{id:'aLgSMbwJhDo',title:'변우석 × 김혜윤 케미 모음',sub:'tvN · 2024',tag:'드라마'},{id:'9VdpFlS4Z1k',title:'21세기 대군부인 — 공식 예고편',sub:'MBC · 2026',tag:'드라마'},{id:'DRB3cGVqaWo',title:'변우석 인터뷰',sub:'tvN · 2024',tag:'인터뷰'},{id:'pDaVJUzEOJo',title:'청춘기록 OST',sub:'tvN · 2020',tag:'OST'},{id:'UEP_S6O3z9M',title:'팬미팅 하이라이트',sub:'2024',tag:'팬미팅'}];
-function renderVideos(){const grid=document.getElementById('videoGrid');if(grid.children.length)return;videoList.forEach((v,i)=>{const div=document.createElement('div');div.className='video-item';div.style.animationDelay=(i*.07)+'s';div.innerHTML=`<div class="video-thumb" onclick="openVideo('${v.id}')"><img src="https://img.youtube.com/vi/${v.id}/mqdefault.jpg" alt="${v.title}" onerror="this.style.display='none'"/><div class="video-play-btn"><div class="play-icon">▶</div></div></div><div class="video-info"><div class="video-tag">${v.tag}</div><div class="video-title">${v.title}</div><div class="video-sub">${v.sub}</div></div>`;grid.appendChild(div)})}
+function renderVideos(){const grid=document.getElementById('videoGrid');if(grid.children.length)return;videoList.forEach((v,i)=>{const div=document.createElement('div');div.className='video-item';div.style.animationDelay=(i*.07)+'s';const thumb=`https://wsrv.nl/?url=https://img.youtube.com/vi/${v.id}/mqdefault.jpg&w=400&output=jpg`;div.innerHTML=`<div class="video-thumb" onclick="openVideo('${v.id}')"><img src="${thumb}" alt="${v.title}" onerror="this.src='https://wsrv.nl/?url=https://img.youtube.com/vi/${v.id}/hqdefault.jpg&w=400'"/><div class="video-play-btn"><div class="play-icon">▶</div></div></div><div class="video-info"><div class="video-tag">${v.tag}</div><div class="video-title">${v.title}</div><div class="video-sub">${v.sub}</div></div>`;grid.appendChild(div)})}
 function openVideo(id){document.getElementById('videoFrame').src=`https://www.youtube.com/embed/${id}?autoplay=1`;document.getElementById('videoModal').classList.remove('hidden')}
 function closeVideoModal(){document.getElementById('videoFrame').src='';document.getElementById('videoModal').classList.add('hidden')}
 document.getElementById('videoModal').addEventListener('click',function(e){if(e.target===this)closeVideoModal()})
@@ -794,6 +813,8 @@ let currentFormat='feed',currentDdayFormat='feed';
 
 function setFormat(f,btn){currentFormat=f;document.querySelectorAll('#formatTabs .fmt-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderDailyCard()}
 function setDdayFormat(f,btn){currentDdayFormat=f;document.querySelectorAll('#ddayFormatTabs .fmt-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderDdayCard()}
+function setCardPhoto(i,btn){selectedCardPhoto=i;document.querySelectorAll('#cardPhotoTabs .fmt-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderDailyCard()}
+function setDdayPhoto(i,btn){selectedDdayPhoto=i;btn.closest('.format-tabs').querySelectorAll('.fmt-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderDdayCard()}
 
 function rr(ctx,x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.arcTo(x+w,y,x+w,y+r,r);ctx.lineTo(x+w,y+h-r);ctx.arcTo(x+w,y+h,x+w-r,y+h,r);ctx.lineTo(x+r,y+h);ctx.arcTo(x,y+h,x,y+h-r,r);ctx.lineTo(x,y+r);ctx.arcTo(x,y,x+r,y,r);ctx.closePath()}
 function drawBg(ctx,t,W,H){
@@ -805,6 +826,28 @@ function drawBg(ctx,t,W,H){
 }
 function wrapLines(ctx,text,maxW){const words=text.split(/\s+/);const lines=[];let cur='';words.forEach(w=>{if(ctx.measureText(cur+w).width<maxW){cur+=w+' '}else{if(cur)lines.push(cur.trim());cur=w+' '}});if(cur.trim())lines.push(cur.trim());return lines}
 
+// BWS 카드용 사진 목록 (wsrv 프록시)
+const BWS_CARD_PHOTOS=[
+  {label:'선재 업고 튀어',src:'https://wsrv.nl/?url=https://img.hankyung.com/photo/202404/01.36360086.1.jpg&w=600&output=jpg'},
+  {label:'21세기 대군부인',src:'https://wsrv.nl/?url=https://img.hankyung.com/photo/202603/01.38927234.1.jpg&w=600&output=jpg'},
+  {label:'공식 화보 A',src:'https://wsrv.nl/?url=https://mimgnews.pstatic.net/image/108/2024/05/28/0003254178_001_20240528143001895.jpg&w=600&output=jpg'},
+  {label:'공식 화보 B',src:'https://wsrv.nl/?url=https://mimgnews.pstatic.net/image/382/2024/07/04/0001073025_001_20240704162004879.jpg&w=600&output=jpg'},
+];
+let selectedCardPhoto=0;
+let selectedDdayPhoto=0;
+
+// 이미지 캐시
+const imgCache={};
+function loadImg(src){
+  return new Promise((res,rej)=>{
+    if(imgCache[src]){res(imgCache[src]);return}
+    const img=new Image();img.crossOrigin='anonymous';
+    img.onload=()=>{imgCache[src]=img;res(img)};
+    img.onerror=()=>rej(new Error('load fail'));
+    img.src=src;
+  });
+}
+
 function renderDailyCard(){
   const fmt=FORMATS[currentFormat];const W=fmt.W,H=fmt.H;
   const t=SEASONS[CS].card;const em=SEASONS[CS].emoji;
@@ -813,21 +856,73 @@ function renderDailyCard(){
   const today=new Date().toLocaleDateString('ko-KR',{year:'numeric',month:'long',day:'numeric'});
   const canvas=document.getElementById('dailyCanvas');const ctx=canvas.getContext('2d');
   canvas.width=W;canvas.height=H;
+  const isStory=H>W,bs=W/500;
+
+  // BG
   drawBg(ctx,t,W,H);
-  const cx=W/2,isStory=H>W,bs=W/500;
-  ctx.fillStyle=t.a;ctx.font=`${Math.floor(18*bs)}px serif`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(em+' 변우석 '+em,cx,isStory?H*.1:H*.14);
-  ctx.strokeStyle=t.a+'50';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(cx-W*.18,isStory?H*.14:H*.2);ctx.lineTo(cx+W*.18,isStory?H*.14:H*.2);ctx.stroke();
-  const qy=isStory?H*.38:H*.42;const qfs=Math.floor(22*bs);
+
+  // BWS 사진 — 배경에 흐릿하게 채우기
+  const photoSrc=BWS_CARD_PHOTOS[selectedCardPhoto].src;
+  loadImg(photoSrc).then(img=>{
+    ctx.save();
+    // 사진을 전체 배경으로 + 오버레이
+    const imgRatio=img.width/img.height;
+    const canvRatio=W/H;
+    let sx=0,sy=0,sw=img.width,sh=img.height;
+    if(imgRatio>canvRatio){sw=img.height*canvRatio;sx=(img.width-sw)/2}
+    else{sh=img.width/canvRatio;sy=(img.height-sh)/2}
+    ctx.globalAlpha=0.28;
+    ctx.drawImage(img,sx,sy,sw,sh,0,0,W,H);
+    ctx.restore();
+
+    // 사진 오른쪽 or 하단에 선명하게
+    ctx.save();
+    const pw=isStory?W*0.55:W*0.42;
+    const ph=pw*(img.height/img.width)*1.1;
+    const px=isStory?W-pw-30:W-pw-40;
+    const py=isStory?H*0.2:H*0.15;
+    rr(ctx,px,py,pw,ph,12);ctx.clip();
+    ctx.drawImage(img,sx,sy,sw,sh,px,py,pw,ph);
+    ctx.restore();
+    // 사진 테두리
+    ctx.save();rr(ctx,px,py,pw,ph,12);ctx.strokeStyle=t.a+'80';ctx.lineWidth=3;ctx.stroke();ctx.restore();
+
+    // 그라데이션 오버레이 (텍스트 영역)
+    const grad=ctx.createLinearGradient(isStory?0:px,0,isStory?px:0,H);
+    grad.addColorStop(0,t.bg+'ee');grad.addColorStop(isStory?0.45:0.55,t.bg+'cc');grad.addColorStop(1,t.bg+'aa');
+    ctx.fillStyle=grad;ctx.fillRect(0,0,isStory?px+pw*0.3:px,H);
+
+    drawDailyText(ctx,t,em,qText,qSrc,today,W,H,isStory,bs);
+  }).catch(()=>{
+    drawDailyText(ctx,t,em,qText,qSrc,today,W,H,isStory,bs);
+  });
+
+  // 텍스트 먼저 (사진 로딩 전)
+  drawDailyText(ctx,t,em,qText,qSrc,today,W,H,isStory,bs);
+}
+
+function drawDailyText(ctx,t,em,qText,qSrc,today,W,H,isStory,bs){
+  const cx=isStory?W*0.38:W*0.3;
+  // 상단 이름
+  ctx.fillStyle=t.a;ctx.font=`${Math.floor(16*bs)}px serif`;ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillText(em+' 변우석 '+em,cx,isStory?H*.1:H*.12);
+  ctx.strokeStyle=t.a+'50';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(cx-W*.14,isStory?H*.14:H*.18);ctx.lineTo(cx+W*.14,isStory?H*.14:H*.18);ctx.stroke();
+  // 명대사
+  const qy=isStory?H*.38:H*.42;const qfs=Math.floor(20*bs);
   ctx.font=`italic ${qfs}px "Cormorant Garamond",serif`;
-  const lines=wrapLines(ctx,qText,W*.72);const lh=qfs*1.5;const th=lines.length*lh;
+  const lines=wrapLines(ctx,qText,isStory?cx*1.7:cx*1.6);const lh=qfs*1.55;const th=lines.length*lh;
   ctx.fillStyle=t.t;ctx.textAlign='center';ctx.textBaseline='middle';
   lines.forEach((l,i)=>ctx.fillText(l,cx,qy-th/2+i*lh+lh/2));
-  ctx.fillStyle=t.a+'80';ctx.font=`${Math.floor(13*bs)}px "IM Fell English SC",serif`;
-  ctx.fillText(qSrc,cx,qy+th/2+Math.floor(22*bs));
-  ctx.strokeStyle=t.a+'50';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(cx-W*.18,isStory?H*.72:H*.76);ctx.lineTo(cx+W*.18,isStory?H*.72:H*.76);ctx.stroke();
-  ctx.fillStyle=t.a+'80';ctx.font=`${Math.floor(11*bs)}px sans-serif`;ctx.fillText(today,cx,isStory?H*.76:H*.82);
-  ctx.fillStyle=t.a+'45';ctx.font=`${Math.floor(10*bs)}px sans-serif`;ctx.fillText('BWS x TTE',cx,isStory?H*.8:H*.88);
+  // 출처
+  ctx.fillStyle=t.a+'90';ctx.font=`${Math.floor(12*bs)}px "IM Fell English SC",serif`;
+  ctx.fillText(qSrc,cx,qy+th/2+Math.floor(20*bs));
+  // 구분선
+  ctx.strokeStyle=t.a+'40';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(cx-W*.14,isStory?H*.72:H*.74);ctx.lineTo(cx+W*.14,isStory?H*.72:H*.74);ctx.stroke();
+  // 날짜·워터마크
+  ctx.fillStyle=t.a+'80';ctx.font=`${Math.floor(10*bs)}px sans-serif`;ctx.fillText(today,cx,isStory?H*.76:H*.80);
+  ctx.fillStyle=t.a+'50';ctx.font=`${Math.floor(9*bs)}px sans-serif`;ctx.fillText('BWS x TTE',cx,isStory?H*.80:H*.86);
 }
+
 
 // D-DAY
 const presetEvents=[{name:'21세기 대군부인 첫방',date:'2026-04-10',emoji:'🎬'},{name:'변우석 생일',date:'2026-10-31',emoji:'🎂'},{name:'핑계고 방영',date:'2026-06-01',emoji:'📺'}];
@@ -843,15 +938,38 @@ function renderDdayCard(){
   const t=SEASONS[CS].card;const em=SEASONS[CS].emoji;
   const{d,h,m,label}=getDday();const evName=selectedEvent?selectedEvent.name:'이벤트';const evEmoji=selectedEvent?selectedEvent.emoji||'📅':'📅';
   const canvas=document.getElementById('ddayCanvas');const ctx=canvas.getContext('2d');
-  canvas.width=W;canvas.height=H;drawBg(ctx,t,W,H);
-  const cx=W/2,isStory=H>W,bs=W/500,cy=isStory?H*.45:H*.5;
-  ctx.fillStyle=t.a;ctx.font=`${Math.floor(18*bs)}px "Noto Sans KR",sans-serif`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(evEmoji+' '+evName,cx,isStory?H*.2:H*.22);
-  ctx.strokeStyle=t.a+'40';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(cx-W*.22,isStory?H*.24:H*.28);ctx.lineTo(cx+W*.22,isStory?H*.24:H*.28);ctx.stroke();
-  ctx.fillStyle=t.a2;ctx.font=`italic bold ${Math.floor(90*bs)}px "Cormorant Garamond",serif`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(label,cx,cy);
-  ctx.fillStyle=t.t;ctx.font=`${Math.floor(16*bs)}px "Noto Sans KR",sans-serif`;ctx.textAlign='center';ctx.fillText(`${String(h).padStart(2,'0')}시간  ${String(m).padStart(2,'0')}분 남음`,cx,cy+Math.floor(60*bs));
-  ctx.strokeStyle=t.a+'40';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(cx-W*.22,isStory?H*.65:H*.72);ctx.lineTo(cx+W*.22,isStory?H*.65:H*.72);ctx.stroke();
-  ctx.fillStyle=t.a+'70';ctx.font=`${Math.floor(12*bs)}px "IM Fell English SC",serif`;ctx.textBaseline='middle';ctx.fillText(`BWS x TTE  ${em}`,cx,isStory?H*.7:H*.8);
-  ctx.fillStyle=t.a+'45';ctx.font=`${Math.floor(10*bs)}px sans-serif`;ctx.fillText(new Date().toLocaleDateString('ko-KR'),cx,isStory?H*.74:H*.87);
+  canvas.width=W;canvas.height=H;
+  const isStory=H>W,bs=W/500;
+  drawBg(ctx,t,W,H);
+  const photoSrc=BWS_CARD_PHOTOS[selectedDdayPhoto].src;
+  function drawDD(){
+    const tx=isStory?W*0.38:W*0.32;
+    ctx.fillStyle=t.a;ctx.font=`${Math.floor(15*bs)}px "Noto Sans KR",sans-serif`;ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText(evEmoji+' '+evName,tx,isStory?H*.18:H*.2);
+    ctx.strokeStyle=t.a+'40';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(tx-W*.18,isStory?H*.22:H*.26);ctx.lineTo(tx+W*.18,isStory?H*.22:H*.26);ctx.stroke();
+    ctx.fillStyle=t.a2||t.a;ctx.font=`italic bold ${Math.floor(78*bs)}px "Cormorant Garamond",serif`;ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText(label,tx,isStory?H*.42:H*.48);
+    ctx.fillStyle=t.t;ctx.font=`${Math.floor(13*bs)}px "Noto Sans KR",sans-serif`;
+    ctx.fillText(String(h).padStart(2,'0')+'시간  '+String(m).padStart(2,'0')+'분 남음',tx,isStory?H*.53:H*.58);
+    ctx.strokeStyle=t.a+'40';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(tx-W*.18,isStory?H*.64:H*.68);ctx.lineTo(tx+W*.18,isStory?H*.64:H*.68);ctx.stroke();
+    ctx.fillStyle=t.a+'70';ctx.font=`${Math.floor(11*bs)}px "IM Fell English SC",serif`;ctx.fillText('BWS x TTE  '+em,tx,isStory?H*.68:H*.76);
+    ctx.fillStyle=t.a+'45';ctx.font=`${Math.floor(10*bs)}px sans-serif`;ctx.fillText(new Date().toLocaleDateString('ko-KR'),tx,isStory?H*.72:H*.83);
+  }
+  drawDD();
+  loadImg(photoSrc).then(img=>{
+    const ir=img.width/img.height,cr=W/H;
+    let sx=0,sy=0,sw=img.width,sh=img.height;
+    if(ir>cr){sw=img.height*cr;sx=(img.width-sw)/2}else{sh=img.width/cr;sy=(img.height-sh)/2}
+    ctx.save();ctx.globalAlpha=0.2;ctx.drawImage(img,sx,sy,sw,sh,0,0,W,H);ctx.restore();
+    const pw=isStory?W*0.5:W*0.36;const ph=pw*(img.height/img.width)*1.05;
+    const px=W-pw-(isStory?20:28);const py=isStory?H*0.3:H*0.18;
+    ctx.save();rr(ctx,px,py,pw,ph,12);ctx.clip();ctx.drawImage(img,sx,sy,sw,sh,px,py,pw,ph);ctx.restore();
+    ctx.save();rr(ctx,px,py,pw,ph,12);ctx.strokeStyle=t.a+'80';ctx.lineWidth=3;ctx.stroke();ctx.restore();
+    const gr=ctx.createLinearGradient(0,0,isStory?W:px+pw*0.2,0);
+    gr.addColorStop(0,t.bg+'ff');gr.addColorStop(0.65,t.bg+'dd');gr.addColorStop(1,t.bg+'00');
+    ctx.fillStyle=gr;ctx.fillRect(0,0,W,H);
+    drawDD();
+  }).catch(()=>{});
 }
 
 function downloadDaily(){const fmt=FORMATS[currentFormat];const c=document.getElementById('dailyCanvas');const tmp=document.createElement('canvas');tmp.width=fmt.W;tmp.height=fmt.H;tmp.getContext('2d').drawImage(c,0,0,fmt.W,fmt.H);const a=document.createElement('a');a.download=`변우석_오늘의카드_${currentFormat}_${CS}.png`;a.href=tmp.toDataURL('image/png');a.click();showToast(`📸 ${fmt.label} 저장 완료! 인스타에 바로 올려보세요 💛`)}
